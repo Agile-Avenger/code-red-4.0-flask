@@ -1,0 +1,25 @@
+{
+  "report_date": "2024-10-26 01:10",
+  "patient_info": {
+    "name": "John Doe",
+    "age": 45,
+    "gender": "Male",
+    "referring_physician": "Dr. Smith",
+    "medical_history": "Diabetes",
+    "symptoms": "Not Provided"
+  },
+  "study_info": {
+    "study_type": "Chest X-ray (PA View)",
+    "classification": "Uncertain",
+    "confidence": null,
+    "confidence_stability": null
+  },
+  "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+  "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+  "recommendations": [
+    "Clinical correlation is essential",
+    "Consider additional views or imaging modalities",
+    "Compare with prior studies if available",
+    "Follow-up imaging may be warranted based on clinical presentation"
+  ]
+}

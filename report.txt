@@ -1,0 +1,280 @@
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+7.54921817779541
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.4863090515136719
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.6231570243835449
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.5413844585418701
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.4620857238769531
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.5451836585998535
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.6872525215148926
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.7024550437927246
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.5713095664978027
+
+
+{
+    "report_date": "2024-10-26 01:13",
+    "patient_info": {
+        "name": "John Doe",
+        "age": 45,
+        "gender": "Male",
+        "referring_physician": "Dr. Smith",
+        "medical_history": "Diabetes",
+        "symptoms": "Not Provided"
+    },
+    "study_info": {
+        "study_type": "Chest X-ray (PA View)",
+        "classification": "Uncertain",
+        "confidence": null,
+        "confidence_stability": null
+    },
+    "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+    "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+    "recommendations": [
+        "Clinical correlation is essential",
+        "Consider additional views or imaging modalities",
+        "Compare with prior studies if available",
+        "Follow-up imaging may be warranted based on clinical presentation"
+    ]
+}
+0.7636020183563232
+
+
