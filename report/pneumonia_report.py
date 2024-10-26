@@ -5,7 +5,6 @@ import tensorflow as tf
 import numpy as np
 import cv2
 from PIL import Image
-import json
 
 
 @dataclass
@@ -306,66 +305,109 @@ class XRayReportGenerator:
 
         return classification, float(confidence), analysis
 
-    def generate_report(
+    def generate_pneumonia_report(
         self, image_path: str, patient_info: PatientInfo = PatientInfo()
-    ) -> Dict:
+    ) -> str:
         """
-        Generate a medical report in JSON format based on image analysis with uncertainty handling.
+        Generate a medical report based on image analysis with uncertainty handling.
         """
         # Analyze image
         classification, confidence, analysis = self.analyze_image(image_path)
 
-        # Prepare the report dictionary
-        report = {
-            "report_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "patient_info": {
-                "name": patient_info.name or "Not Provided",
-                "age": patient_info.age or "Not Provided",
-                "gender": patient_info.gender or "Not Provided",
-                "referring_physician": patient_info.referring_physician
-                or "Not Provided",
-                "medical_history": patient_info.medical_history or "Not Provided",
-                "symptoms": (
-                    patient_info.symptoms if patient_info.symptoms else "Not Provided"
-                ),
-            },
-            "study_info": {
-                "study_type": "Chest X-ray (PA View)",
-                "classification": classification,
-                "confidence": confidence if classification != "Uncertain" else None,
-                "confidence_stability": analysis.get("confidence_metrics", {}).get(
-                    "std_prediction", None
-                ),
-            },
-            "findings": {},
-            "impression": "",
-            "recommendations": [],
-        }
+        report = []
 
-        # Populate findings, impression, and recommendations based on the classification
+        # Header
+        report.append("RADIOLOGICAL REPORT")
+        report.append("=" * 50)
+        report.append(f"Date: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
+
+        # Patient Information
+        report.append("\nPATIENT INFORMATION")
+        report.append("-" * 20)
+        report.append(f"Name: {patient_info.name or 'Not Provided'}")
+        report.append(f"Age: {patient_info.age or 'Not Provided'}")
+        report.append(f"Gender: {patient_info.gender or 'Not Provided'}")
+        report.append(
+            f"Referring Physician: {patient_info.referring_physician or 'Not Provided'}"
+        )
+
+        if patient_info.medical_history:
+            report.append(f"Relevant Medical History: {patient_info.medical_history}")
+        if patient_info.symptoms:
+            report.append(f"Presenting Symptoms: {', '.join(patient_info.symptoms)}")
+
+        # Study Information
+        report.append("\nSTUDY INFORMATION")
+        report.append("-" * 20)
+        report.append("Study: Chest X-ray (PA View)")
+        report.append(f"Analysis: {classification}")
+
+        if classification != "Uncertain":
+            report.append(f"AI Analysis Confidence: {confidence*100:.1f}%")
+            if "confidence_metrics" in analysis:
+                report.append(
+                    f"Prediction Stability: ±{analysis['confidence_metrics']['std_prediction']*100:.1f}%"
+                )
+
+        # Findings and Recommendations
+        report.append("\nFINDINGS")
+        report.append("-" * 20)
+
         if classification == "Uncertain":
-            report["findings"] = self.report_patterns["Uncertain"]["findings"]
-            report["impression"] = self.report_patterns["Uncertain"]["impression"]
-            report["recommendations"] = self.report_patterns["Uncertain"][
-                "recommendations"
-            ]
+            report.append(self.report_patterns["Uncertain"]["findings"])
+            report.append("\nIMPRESSION")
+            report.append("-" * 20)
+            report.append(self.report_patterns["Uncertain"]["impression"])
+            report.append("\nRECOMMENDATIONS")
+            report.append("-" * 20)
+            for i, rec in enumerate(
+                self.report_patterns["Uncertain"]["recommendations"], 1
+            ):
+                report.append(f"{i}. {rec}")
         elif classification == "Normal":
-            report["findings"] = self.report_patterns["Normal"]["findings"]
-            report["impression"] = self.report_patterns["Normal"]["impression"]
-            report["recommendations"] = self.report_patterns["Normal"][
-                "recommendations"
-            ]
-        elif classification == "Pneumonia":
-            severity = analysis["severity"]
-            report["findings"] = {
-                **self.report_patterns["Pneumonia"]["findings"],
-                "severity": severity,
-                "affected_areas": analysis["affected_areas"],
-                "pleural_condition": analysis["pleural_condition"],
-            }
-            report["impression"] = f"Pneumonia detected with severity: {severity}."
-            report["recommendations"] = self.report_patterns["Pneumonia"][
-                "severity_recommendations"
-            ][severity]
+            for finding in self.report_patterns["Normal"]["findings"].values():
+                report.append(finding)
+            report.append("\nIMPRESSION")
+            report.append("-" * 20)
+            report.append(self.report_patterns["Normal"]["impression"])
+            report.append("\nRECOMMENDATIONS")
+            report.append("-" * 20)
+            for i, rec in enumerate(
+                self.report_patterns["Normal"]["recommendations"], 1
+            ):
+                report.append(f"{i}. {rec}")
+        else:  # Pneumonia case
+            pattern = self.report_patterns["Pneumonia"]
+            report.append(
+                f"Lung Opacity: {pattern['findings']['lung_opacity'][analysis['severity']]}"
+            )
+            report.append(
+                f"Location: Predominantly affecting the {analysis['affected_areas']}"
+            )
+            report.append(
+                f"Pleural Space: {pattern['findings']['pleural_space'][analysis['pleural_condition']]}"
+            )
+            report.append(pattern["findings"]["cardiovascular"]["normal"])
 
-        return json.dumps(report, indent=4)
+            report.append("\nIMPRESSION")
+            report.append("-" * 20)
+            report.append(
+                f"Findings suggestive of {analysis['severity'].title()} Pneumonia affecting the {analysis['affected_areas']}"
+            )
+            report.append("Clinical correlation is strongly recommended.")
+
+            report.append("\nRECOMMENDATIONS")
+            report.append("-" * 20)
+            for i, rec in enumerate(
+                pattern["severity_recommendations"][analysis["severity"]], 1
+            ):
+                report.append(f"{i}. {rec}")
+
+        # Add disclaimer
+        report.append("\nDISCLAIMER")
+        report.append("-" * 20)
+        report.append(
+            "This report was generated with the assistance of AI technology and should be reviewed by a qualified healthcare professional. Clinical correlation is essential."
+        )
+
+        return "\n".join(report)

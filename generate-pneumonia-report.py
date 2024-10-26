@@ -2,7 +2,7 @@ import requests
 import time
 import os
 
-BASE_DIR = os.path.join("D:", os.sep, "aa", "images")
+BASE_DIR = os.path.join("D:", os.sep, "aa", "flask", "images")
 pneumonia_files = [f"{BASE_DIR}/pneumonia/{i}.jpeg" for i in range(1, 11)]
 
 # Define the endpoints
