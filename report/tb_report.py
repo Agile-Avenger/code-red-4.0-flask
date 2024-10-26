@@ -1,10 +1,9 @@
 import numpy as np
 from PIL import Image
 import datetime
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Optional, List
 import cv2
 from dataclasses import dataclass
-from typing import Dict, Optional, Tuple, List
 import tensorflow as tf
 
 
@@ -29,20 +28,76 @@ class TBAnalysisModel:
         self.report_patterns = self._initialize_report_patterns()
 
     def _initialize_report_patterns(self) -> Dict:
-        """Initialize standard reporting patterns and templates."""
+        """Initialize report templates and patterns."""
         return {
-            "normal": {
-                "description": "No significant abnormalities detected",
-                "recommendations": "Routine follow-up as clinically indicated"
+            "Normal": {
+                "findings": {
+                    "lung_fields": "Lung fields appear clear without definitive consolidation, infiltrates, or effusions.",
+                    "lung_volumes": "Lung volumes appear adequate with visible costophrenic angles.",
+                    "cardiovascular": "Heart size and mediastinal contours appear within normal limits.",
+                    "pleural_space": "No definitive evidence of pleural effusion or pneumothorax.",
+                    "bones": "No acute osseous abnormalities identified.",
+                    "soft_tissues": "Soft tissues appear unremarkable.",
+                },
+                "impression": "No definitive acute cardiopulmonary findings identified on this examination.",
+                "recommendations": [
+                    "Clinical correlation is recommended",
+                    "Consider follow-up imaging if symptoms persist or worsen",
+                    "Compare with prior studies if available",
+                ],
             },
-            "tuberculosis": {
-                "description": "Findings suggestive of tuberculosis",
-                "recommendations": "Clinical correlation and further diagnostic testing recommended"
+            "Tuberculosis": {
+                "findings": {
+                    "lung_opacity": {
+                        "severe": "Areas of increased opacity noted in the lung fields, potentially representing severe consolidation patterns consistent with tuberculosis.",
+                        "moderate": "Patchy areas of increased opacity noted, possibly representing moderate consolidation suggestive of tuberculosis.",
+                        "mild": "Subtle areas of increased opacity noted, may represent early or mild tuberculosis manifestation.",
+                    },
+                    "cardiovascular": {
+                        "normal": "Cardiac silhouette appears within normal limits. Mediastinal contours are preserved.",
+                        "abnormal": "Cardiac silhouette appears mildly enlarged. Further evaluation of mediastinal structures may be warranted.",
+                    },
+                    "pleural_space": {
+                        "severe": "Possible significant pleural effusion noted with blunting of costophrenic angles.",
+                        "moderate": "Possible moderate pleural effusion with blunting of costophrenic angles.",
+                        "mild": "Minimal blunting of costophrenic angles noted, may represent small pleural effusion.",
+                        "normal": "Costophrenic angles appear preserved.",
+                    },
+                },
+                "severity_recommendations": {
+                    "severe": [
+                        "Clinical correlation strongly recommended",
+                        "Consider additional imaging studies for confirmation",
+                        "Monitor clinical status closely",
+                        "Consider infectious disease consultation",
+                        "Follow-up imaging recommended based on clinical course",
+                    ],
+                    "moderate": [
+                        "Clinical correlation recommended",
+                        "Consider follow-up imaging in 24-48 hours if symptoms persist",
+                        "Monitor for clinical improvement",
+                        "Consider additional diagnostic testing if clinically indicated",
+                        "Compare with prior studies if available",
+                    ],
+                    "mild": [
+                        "Clinical correlation recommended",
+                        "Consider follow-up imaging if symptoms worsen",
+                        "Monitor clinical course",
+                        "Compare with prior studies if available",
+                        "Consider additional views if clinically indicated",
+                    ],
+                },
             },
-            "uncertain": {
-                "description": "Findings are inconclusive",
-                "recommendations": "Consider repeat imaging or alternative diagnostic methods"
-            }
+            "Uncertain": {
+                "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
+                "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
+                "recommendations": [
+                    "Clinical correlation is essential",
+                    "Consider additional views or imaging modalities",
+                    "Compare with prior studies if available",
+                    "Follow-up imaging may be warranted based on clinical presentation",
+                ],
+            },
         }
 
     def preprocess_image(self, image_path: str) -> Tuple[np.ndarray, bool]:
@@ -95,11 +150,7 @@ class TBAnalysisModel:
             return "Uncertain", float(mean_pred), {"uncertainty": "Low confidence"}
 
         analysis = {
-            "condition": (
-                "Normal"
-                if classification == "Normal"
-                else "Findings suggestive of tuberculosis"
-            ),
+            "condition": classification,
             "confidence_metrics": {
                 "mean_prediction": float(mean_pred),
                 "std_prediction": float(std_pred),
@@ -107,11 +158,25 @@ class TBAnalysisModel:
         }
         return classification, float(confidence), analysis
 
-    def generate_tb_report(
+    def _determine_severity(self, confidence: float) -> str:
+        """Determine the severity level based on confidence score."""
+        if confidence > 0.9:
+            return "severe"
+        elif confidence > 0.75:
+            return "moderate"
+        else:
+            return "mild"
+
+    def generate_report(
         self, image_path: str, patient_info: PatientInfo = PatientInfo()
     ) -> Dict:
         classification, confidence, analysis = self.analyze_image(image_path)
-        diagnosis = "Tuberculosis" if classification == "Tuberculosis" else "Normal"
+        
+        # Get the appropriate report template
+        template = self.report_patterns[classification]
+        
+        # Determine severity for tuberculosis cases
+        severity = self._determine_severity(confidence) if classification == "Tuberculosis" else None
 
         report = {
             "patient_info": {
@@ -119,38 +184,41 @@ class TBAnalysisModel:
                 "age": patient_info.age or "Not Provided",
                 "gender": patient_info.gender or "Not Provided",
                 "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
-                "referring_physician": patient_info.referring_physician
-                or "Not Provided",
+                "referring_physician": patient_info.referring_physician or "Not Provided",
+                "medical_history": patient_info.medical_history or "Not Provided",
+                "symptoms": patient_info.symptoms or [],
             },
             "study": {
                 "type": "Chest X-ray",
                 "view": "PA",
                 "reason_for_examination": "Suspected Tuberculosis",
+                "image_quality": "Adequate" if classification != "Uncertain" else "Limited",
             },
-            "findings": {
-                "lung_fields": {
-                    "upper_lobe_opacities": diagnosis == "Tuberculosis",
-                    "infiltrates_or_nodules": diagnosis == "Tuberculosis",
-                    "cavitation_or_fibrosis": diagnosis == "Tuberculosis",
-                    "volume_loss": diagnosis == "Tuberculosis",
-                    "interstitial_pattern": diagnosis == "Tuberculosis",
-                },
-            },
-            "impression": {
-                "summary_of_findings": f"There is {'evidence of tuberculosis' if diagnosis == 'Tuberculosis' else 'no evidence of tuberculosis'}.",
-                "diagnosis": diagnosis,
-                "acute_pathology": (
-                    "None" if diagnosis == "Normal" else "Possible tuberculosis"
-                ),
-            },
-            "recommendations": {
-                "clinical_correlation": (
-                    "Further clinical tests suggested"
-                    if diagnosis == "Tuberculosis"
-                    else "Routine follow-up"
-                ),
-                "follow_up": "6 months" if diagnosis == "Normal" else "Immediate",
-            },
+            "analysis_metrics": analysis["confidence_metrics"],
         }
+
+        # Add findings based on classification
+        if classification == "Normal":
+            report.update({
+                "findings": template["findings"],
+                "impression": template["impression"],
+                "recommendations": template["recommendations"]
+            })
+        elif classification == "Tuberculosis":
+            report.update({
+                "findings": {
+                    "lung_opacity": template["findings"]["lung_opacity"][severity],
+                    "cardiovascular": template["findings"]["cardiovascular"]["normal"],
+                    "pleural_space": template["findings"]["pleural_space"][severity],
+                },
+                "impression": f"Findings suggestive of {severity} tuberculosis with {confidence:.1%} confidence.",
+                "recommendations": template["severity_recommendations"][severity]
+            })
+        else:  # Uncertain
+            report.update({
+                "findings": template["findings"],
+                "impression": template["impression"],
+                "recommendations": template["recommendations"]
+            })
 
         return report
