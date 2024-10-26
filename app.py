@@ -12,14 +12,20 @@ from translate.translate import MedicalReportTranslator
 from report.pneumonia_report import XRayReportGenerator, PatientInfo
 from report.tb_report import TBAnalysisModel
 from mongo import mongo
+from urllib.parse import quote_plus
+
+# Assuming these credentials for your MongoDB URI
+username = "admin"
+password = "Protect@$066"
+encoded_password = quote_plus(password)
 
 app = Flask(__name__)
 
 # MongoDB Configuration
 app.config["MONGO_URI"] = os.getenv(
-    "MONGO_URI", "mongodb://localhost:27017/your_database"
+    "MONGO_URI", f"mongodb+srv://{username}:{encoded_password}@medi-dignose.8gh8b.mongodb.net/medidignose"
 )
-mongo = PyMongo(app)
+mongo_app = PyMongo(app)
 
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate(
@@ -52,7 +58,7 @@ def add_patient():
     data["uid"] = uid  # Associate the data with the UID
     is_valid, message = mongo.validate_document(data, mongo.patient_info_schema)
     if is_valid:
-        mongo.db.patients.update_one({"uid": uid}, {"$set": data}, upsert=True)
+        mongo_app.db.patients.update_one({"uid": uid}, {"$set": data}, upsert=True)
         return jsonify(message="Patient record added/updated successfully"), 201
     else:
         return jsonify(error=message), 400
@@ -64,12 +70,13 @@ def get_patient():
     if error:
         return jsonify(error=error), 401
 
-    patient = mongo.db.patients.find_one({"uid": uid})
+    patient = mongo_app.db.patients.find_one({"uid": uid})
     if patient:
         patient_data = {
             field: patient.get(field) for field in mongo.patient_info_schema.keys()
         }
         patient_data["uid"] = uid
+        print(patient_data)
         return jsonify(patient_data), 200
     else:
         return jsonify(error="Patient not found"), 404
@@ -84,7 +91,7 @@ def update_patient():
     data = request.json
     is_valid, message = mongo.validate_document(data, mongo.patient_info_schema)
     if is_valid:
-        result = mongo.db.patients.update_one({"uid": uid}, {"$set": data})
+        result = mongo_app.db.patients.update_one({"uid": uid}, {"$set": data})
         if result.modified_count:
             return jsonify(message="Patient record updated successfully"), 200
         else:
