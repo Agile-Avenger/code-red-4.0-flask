@@ -3,7 +3,7 @@ import time
 import os
 
 BASE_DIR = os.path.join("D:", os.sep, "aa", "flask", "images")
-tb_files = [f"{BASE_DIR}/tb/{i}.jpg" for i in range(1, 11)]
+tb_files = [f"{BASE_DIR}/tb/{i}.jpg" for i in range(9, 11)]
 
 # Define the endpoints
 pneumonia_endpoint = "http://127.0.0.1:5000/generate-tb-report"

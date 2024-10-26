@@ -125,7 +125,7 @@ def create_pneumonia_report():
         image.save(temp_path)
 
         # Initialize the generator
-        generator = XRayReportGenerator(model_path="D://aa//flask/models/pneumonia.h5")
+        generator = XRayReportGenerator(model_path="./models/pneumonia.h5")
 
         # Create patient info
         patient_info = PatientInfo(
@@ -167,26 +167,48 @@ def create_tb_report():
             return jsonify({"error": "No file provided"}), 400
 
         file = request.files["file"]
+
+        # Create a temporary file to save the uploaded image
+        temp_dir = tempfile.gettempdir()
+        temp_path = os.path.join(temp_dir, "temp_xray.png")
+
+        # Save the uploaded file to temporary location
         image = Image.open(io.BytesIO(file.read()))
+        image.save(temp_path)
 
-        generator = TBAnalysisModel()
-        generator.model = tb
+        # Initialize the generator
+        generator = TBAnalysisModel(model_path="./models/tb.h5")
 
+        # Create patient info
         patient_info = PatientInfo(
-            name="John Doe",
-            age=45,
-            gender="Male",
-            referring_physician="Dr. Smith",
-            medical_history="Diabetes",
+            name=request.form.get("name", "Not Provided"),
+            age=int(request.form.get("age", 0)) if request.form.get("age") else None,
+            gender=request.form.get("gender", "Not Provided"),
+            referring_physician=request.form.get("referring_physician", "Not Provided"),
+            medical_history=request.form.get("medical_history", "Not Provided"),
+            symptoms=(
+                request.form.get("symptoms", "").split(",")
+                if request.form.get("symptoms")
+                else None
+            ),
         )
 
-        json_report = generator.generate_tb_report(
-            image_path=image, patient_info=patient_info
+        # Generate the report using the temporary file path
+        report = generator.generate_tb_report(
+            image_path=temp_path, patient_info=patient_info
         )
 
-        return jsonify(json_report)
+        # Clean up the temporary file
+        try:
+            os.remove(temp_path)
+        except:
+            pass  # Ignore cleanup errors
+
+        return jsonify({"report": report})
 
     except Exception as e:
+        # Log the full error for debugging
+        print(f"Error generating report: {str(e)}")
         return jsonify({"error": str(e)}), 400
 
 
