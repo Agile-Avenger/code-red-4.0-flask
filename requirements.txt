@@ -2,3 +2,6 @@ Flask
 tensorflow
 Pillow
 numpy
+flask_pymongo
+firebase_admin
+opencv-python
