@@ -1,25 +1,3 @@
 {
-  "report_date": "2024-10-26 01:10",
-  "patient_info": {
-    "name": "John Doe",
-    "age": 45,
-    "gender": "Male",
-    "referring_physician": "Dr. Smith",
-    "medical_history": "Diabetes",
-    "symptoms": "Not Provided"
-  },
-  "study_info": {
-    "study_type": "Chest X-ray (PA View)",
-    "classification": "Uncertain",
-    "confidence": null,
-    "confidence_stability": null
-  },
-  "findings": "The radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.",
-  "impression": "Findings are inconclusive and require clinical correlation and possibly additional imaging.",
-  "recommendations": [
-    "Clinical correlation is essential",
-    "Consider additional views or imaging modalities",
-    "Compare with prior studies if available",
-    "Follow-up imaging may be warranted based on clinical presentation"
-  ]
+  "report": "RADIOLOGICAL REPORT\n==================================================\nDate: 2024-10-26 12:34\n\nPATIENT INFORMATION\n--------------------\nName: Not Provided\nAge: Not Provided\nGender: Not Provided\nReferring Physician: Not Provided\nRelevant Medical History: Not Provided\n\nSTUDY INFORMATION\n--------------------\nStudy: Chest X-ray (PA View)\nAnalysis: Uncertain\n\nFINDINGS\n--------------------\nThe radiographic findings are indeterminate. Technical factors or patient positioning may limit interpretation.\n\nIMPRESSION\n--------------------\nFindings are inconclusive and require clinical correlation and possibly additional imaging.\n\nRECOMMENDATIONS\n--------------------\n1. Clinical correlation is essential\n2. Consider additional views or imaging modalities\n3. Compare with prior studies if available\n4. Follow-up imaging may be warranted based on clinical presentation\n\nDISCLAIMER\n--------------------\nThis report was generated with the assistance of AI technology and should be reviewed by a qualified healthcare professional. Clinical correlation is essential."
 }

@@ -2,14 +2,12 @@ import requests
 import time
 import os
 
-BASE_DIR = os.path.join("D:", os.sep, "aa", "images")
+BASE_DIR = os.path.join("D:", os.sep, "aa", "flask", "images")
 pneumonia_files = [f"{BASE_DIR}/pneumonia/{i}.jpeg" for i in range(1, 11)]
 tb_files = [f"{BASE_DIR}/tb/{i}.jpg" for i in range(1, 11)]
 
 # Define the endpoints
-pneumonia_endpoint = (
-    "https://flask-app-616464352400.us-central1.run.app/predict_pneumonia"
-)
+pneumonia_endpoint = "http://127.0.0.1:5000/predict_pneumonia"
 
 tb_endpoint = "https://flask-app-616464352400.us-central1.run.app/predict_tb"
 
