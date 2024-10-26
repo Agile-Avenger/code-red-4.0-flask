@@ -8,7 +8,7 @@ import io
 import tempfile
 from flask_pymongo import PyMongo
 from firebase_admin import auth, credentials, initialize_app
-
+from translate.translate import MedicalReportTranslator
 from report.pneumonia_report import XRayReportGenerator, PatientInfo
 from report.tb_report import TBAnalysisModel
 from mongo import mongo
@@ -222,6 +222,91 @@ def predict_pneumonia():
 @app.route("/predict_tb", methods=["POST"])
 def predict_tb():
     return predict_from_model(tb, target_size=(224, 224))
+
+@app.route("/translate-report", methods=["POST"])
+def translate_medical_report_endpoint():
+    try:
+        # Get the report from the request body
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        # Extract report and target language
+        if "report" not in data:
+            return jsonify({"error": "Report data is required"}), 400
+        if "target_language" not in data:
+            return jsonify({"error": "Target language is required"}), 400
+
+        report = data["report"]
+        target_language = data["target_language"]
+
+        # Validate target language
+        supported_languages = {
+            "hi": "Hindi",
+            "bn": "Bengali",
+            "te": "Telugu",
+            "ta": "Tamil",
+            "mr": "Marathi",
+            "gu": "Gujarati",
+            "kn": "Kannada",
+            "ml": "Malayalam",
+            "pa": "Punjabi",
+            "ur": "Urdu"
+        }
+
+        if target_language not in supported_languages:
+            return jsonify({
+                "error": f"Unsupported language. Please choose from: {', '.join(supported_languages.keys())}"
+            }), 400
+
+        # Initialize translator
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        credentials_path = os.path.join(current_dir, "./secrets/medi-dignose-8001634df36a.json")
+        translator = MedicalReportTranslator(credentials_path)
+        translator.set_project("medi-dignose")  # Replace with your project ID
+
+        # Translate the entire report
+        translated_report = translator.translate_value(report, target_language)
+
+        return jsonify({
+            "status": "success",
+            "translated_report": translated_report,
+            "source_language": "en",
+            "target_language": target_language,
+            "target_language_name": supported_languages[target_language]
+        }), 200
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        print(f"Translation error: {str(e)}")  # Log the error
+        return jsonify({"error": "Internal server error during translation"}), 500
+
+@app.route("/supported-languages", methods=["GET"])
+def get_supported_languages():
+    try:
+        # Indian languages commonly used in medical reports
+        supported_languages = {
+            "hi": "Hindi",
+            "bn": "Bengali",
+            "te": "Telugu",
+            "ta": "Tamil",
+            "mr": "Marathi",
+            "gu": "Gujarati",
+            "kn": "Kannada",
+            "ml": "Malayalam",
+            "pa": "Punjabi",
+            "ur": "Urdu"
+        }
+        
+        return jsonify({
+            "status": "success",
+            "supported_languages": supported_languages,
+            "total_languages": len(supported_languages)
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error fetching supported languages"}), 500
 
 
 def predict_from_model(model, target_size):

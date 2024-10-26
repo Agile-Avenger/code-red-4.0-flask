@@ -3,3 +3,9 @@
 models
 
 secrets
+
+__pycache__
+
+mongo\__pycache__
+
+reports\__pycache__

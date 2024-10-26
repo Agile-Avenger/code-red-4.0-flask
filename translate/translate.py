@@ -32,53 +32,23 @@ class MedicalReportTranslator:
         return response.translations[0].translated_text
 
     def _should_translate_key(self, key: str) -> bool:
-        """
-        Determine if a key's value should be translated based on its name
-        """
+        """Determine if a key's value should be translated based on its name"""
         non_translatable_keys = {
-            "date",
-            "age",
-            "gender",
-            "type",
-            "view",
-            "image_quality",
-            "name",
-            "referring_physician",
-            "analysis_metrics",
-            "confidence_metrics",
+            "date", "age", "gender", "type", "view", "image_quality", "name",
+            "referring_physician", "analysis_metrics", "confidence_metrics"
         }
         return key not in non_translatable_keys
 
-    def translate_value(
-        self,
-        value: Union[str, Dict, List],
-        target_language: str,
-        current_key: str = None,
-    ) -> Union[str, Dict, List]:
+    def translate_value(self, value: Union[str, Dict, List], target_language: str, current_key: str = None) -> Union[str, Dict, List]:
         """Recursively translate a value that could be a string, dictionary, or list"""
         if isinstance(value, str):
             if current_key and not self._should_translate_key(current_key):
                 return value
-
-            # Special handling for medical terms and statuses
-            medical_terms = {
-                "normal",
-                "abnormal",
-                "severe",
-                "moderate",
-                "mild",
-                "adequate",
-                "limited",
-                "uncertain",
-            }
-
-            if value.lower() in medical_terms or (value.strip() and not value.isdigit()):
+            if value.strip() and not value.isdigit():
                 return self.translate_text(value, target_language)
             return value
         elif isinstance(value, dict):
-            return {
-                k: self.translate_value(v, target_language, k) for k, v in value.items()
-            }
+            return {k: self.translate_value(v, target_language, k) for k, v in value.items()}
         elif isinstance(value, list):
             return [self.translate_value(item, target_language) for item in value]
         else:
@@ -192,7 +162,7 @@ class MedicalReportTranslator:
             raise Exception(f"Translation error: {str(e)}")
 
 
-if __name__ == "__main__":
+
     # Set the path to your credentials file
     current_dir = os.path.dirname(os.path.abspath(__file__))
     credentials_path = os.path.join(current_dir, "./secrets/medi-dignose-8001634df36a.json")  # Put your JSON file in the same directory
