@@ -5,6 +5,7 @@ from typing import Tuple, Dict
 import cv2
 from dataclasses import dataclass
 from typing import Dict, Optional, Tuple, List
+import tensorflow as tf
 
 
 @dataclass
@@ -18,9 +19,31 @@ class PatientInfo:
 
 
 class TBAnalysisModel:
-    def _init_(self, model, confidence_threshold=0.8):
-        self.model = model
+    def __init__(self, model_path: str, confidence_threshold: float = 0.75):
+        """Initialize the report generator with a trained TensorFlow model."""
+        self.model = tf.keras.models.load_model(model_path)
+        self.model.compile(
+            optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
+        )
         self.confidence_threshold = confidence_threshold
+        self.report_patterns = self._initialize_report_patterns()
+
+    def _initialize_report_patterns(self) -> Dict:
+        """Initialize standard reporting patterns and templates."""
+        return {
+            "normal": {
+                "description": "No significant abnormalities detected",
+                "recommendations": "Routine follow-up as clinically indicated"
+            },
+            "tuberculosis": {
+                "description": "Findings suggestive of tuberculosis",
+                "recommendations": "Clinical correlation and further diagnostic testing recommended"
+            },
+            "uncertain": {
+                "description": "Findings are inconclusive",
+                "recommendations": "Consider repeat imaging or alternative diagnostic methods"
+            }
+        }
 
     def preprocess_image(self, image_path: str) -> Tuple[np.ndarray, bool]:
         try:
