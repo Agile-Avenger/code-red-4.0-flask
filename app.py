@@ -16,7 +16,9 @@ from mongo import mongo
 app = Flask(__name__)
 
 # MongoDB Configuration
-app.config["MONGO_URI"] = "mongodb://localhost:27017/medidignose"
+app.config["MONGO_URI"] = os.getenv(
+    "MONGO_URI", "mongodb://localhost:27017/your_database"
+)
 mongo = PyMongo(app)
 
 # Initialize Firebase Admin SDK
