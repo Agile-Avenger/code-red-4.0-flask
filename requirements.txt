@@ -5,3 +5,4 @@ numpy
 flask_pymongo
 firebase_admin
 opencv-python
+google-cloud-translate

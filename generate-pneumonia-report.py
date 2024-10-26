@@ -3,10 +3,10 @@ import time
 import os
 
 BASE_DIR = os.path.join("D:", os.sep, "aa", "flask", "images")
-pneumonia_files = [f"{BASE_DIR}/pneumonia/{i}.jpeg" for i in range(1, 11)]
+pneumonia_files = [f"{BASE_DIR}/pneumonia/{i}.jpeg" for i in range(1, 2)]
 
 # Define the endpoints
-pneumonia_endpoint = "http://127.0.0.1:5000/generate-pneumonia-report"
+pneumonia_endpoint = "https://flask-app-616464352400.us-central1.run.app/generate-pneumonia-report"
 
 
 def test_model(endpoint, files):
@@ -34,6 +34,5 @@ with open(report_file_path, "w") as report_file:
     for file_path, response_json, elapsed_time in report:
 
         report_file.write(f"{response_json}\n")
-        report_file.write(f"{elapsed_time}\n\n\n")
 
 print(f"Report saved to: {report_file_path}")

@@ -167,7 +167,7 @@ class TBAnalysisModel:
         else:
             return "mild"
 
-    def generate_report(
+    def generate_tb_report(
         self, image_path: str, patient_info: PatientInfo = PatientInfo()
     ) -> Dict:
         classification, confidence, analysis = self.analyze_image(image_path)

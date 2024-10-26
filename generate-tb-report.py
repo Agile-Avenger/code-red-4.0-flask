@@ -6,7 +6,7 @@ BASE_DIR = os.path.join("D:", os.sep, "aa", "flask", "images")
 tb_files = [f"{BASE_DIR}/tb/{i}.jpg" for i in range(9, 11)]
 
 # Define the endpoints
-pneumonia_endpoint = "http://127.0.0.1:5000/generate-tb-report"
+pneumonia_endpoint = "https://flask-app-616464352400.us-central1.run.app/generate-tb-report"
 
 
 def test_model(endpoint, files):
